@@ -114,7 +114,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         color: #4CAF50;
                         cursor: pointer;
                         border-radius: 20px;
-                    ">Закрыть</button>
+                    ">В главное меню</button>
                 </div>
             `;
             document.body.appendChild(adScreen);
@@ -122,8 +122,9 @@ document.addEventListener('DOMContentLoaded', () => {
             const closeBtn = adScreen.querySelector('.close-ad-btn');
             closeBtn.addEventListener('click', () => {
                 adScreen.remove();
-                winPopup.classList.add('show');
-                overlay.classList.add('show');
+                winPopup.classList.remove('show');
+                overlay.classList.remove('show');
+                showMainMenu();
             });
 
             const adBtn = adScreen.querySelector('.watch-ad-btn');
@@ -166,6 +167,100 @@ document.addEventListener('DOMContentLoaded', () => {
                 }, 1000);
             });
         };
+    }
+
+    function showMainMenu() {
+        const mainMenu = document.createElement('div');
+        mainMenu.className = 'start-screen';
+        mainMenu.innerHTML = `
+            <div class="start-content">
+                <h2>Главное меню</h2>
+                <div class="prize-preview" style="
+                    margin: 20px 0;
+                    padding: 20px;
+                    background: rgba(255,255,255,0.1);
+                    border-radius: 15px;
+                ">
+                    <h3 style="color: #4CAF50; margin-bottom: 15px;">Возможные призы:</h3>
+                    <div style="display: flex; justify-content: space-around; margin-bottom: 20px;">
+                        <div>
+                            <img src="https://i.postimg.cc/nh2gXRj2/koala-button.png" style="width: 50px; height: 50px;">
+                            <p>5400</p>
+                        </div>
+                        <div>
+                            <img src="https://i.postimg.cc/mrrqCY7s/image-Photoroom.png" style="width: 50px; height: 50px;">
+                            <p>3600</p>
+                        </div>
+                        <div>
+                            <img src="https://i.postimg.cc/N0Pn4Kxr/ton.png" style="width: 50px; height: 50px;">
+                            <p>2400</p>
+                        </div>
+                    </div>
+                </div>
+                <button class="watch-ad-btn">Играть</button>
+            </div>
+        `;
+        document.body.appendChild(mainMenu);
+
+        const playBtn = mainMenu.querySelector('.watch-ad-btn');
+        playBtn.addEventListener('click', () => {
+            mainMenu.remove();
+            
+            // Показываем экран рекламы
+            const adScreen = document.createElement('div');
+            adScreen.className = 'start-screen';
+            adScreen.innerHTML = `
+                <div class="start-content">
+                    <h2>Новая игра</h2>
+                    <p>Для начала игры посмотрите короткую рекламу</p>
+                    <button class="watch-ad-btn">Смотреть рекламу</button>
+                    <div class="ad-progress">
+                        <div class="ad-progress-bar"></div>
+                    </div>
+                    <div class="ad-timer">5</div>
+                </div>
+            `;
+            document.body.appendChild(adScreen);
+
+            const adBtn = adScreen.querySelector('.watch-ad-btn');
+            const adProgress = adScreen.querySelector('.ad-progress');
+            const adProgressBar = adScreen.querySelector('.ad-progress-bar');
+            const adTimer = adScreen.querySelector('.ad-timer');
+
+            adBtn.addEventListener('click', () => {
+                adBtn.style.display = 'none';
+                adProgress.style.display = 'block';
+                adTimer.style.display = 'block';
+
+                const totalTime = 5;
+                let timeLeft = totalTime;
+                adTimer.textContent = timeLeft;
+
+                const interval = setInterval(() => {
+                    const elapsed = totalTime - timeLeft;
+                    const progress = (elapsed / totalTime) * 100;
+                    adProgressBar.style.width = `${progress}%`;
+
+                    if (progress >= 100) {
+                        clearInterval(interval);
+                        adScreen.remove();
+                        restartGame();
+                    }
+                }, 10);
+
+                const timer = setInterval(() => {
+                    timeLeft--;
+                    adTimer.textContent = timeLeft;
+
+                    if (timeLeft <= 0) {
+                        clearInterval(timer);
+                        clearInterval(interval);
+                        adScreen.remove();
+                        restartGame();
+                    }
+                }, 1000);
+            });
+        });
     }
     
     function startCheckInterval() {
