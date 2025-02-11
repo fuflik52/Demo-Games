@@ -265,16 +265,17 @@ body::before {
     position: relative;
     cursor: pointer;
     transform-style: preserve-3d;
-    transition: all 0.6s cubic-bezier(0.4, 0.0, 0.2, 1);
+    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
     width: 100%;
     max-width: 100px;
     margin: 0;
 }
 
 .card:not(.flipped):not(.matched):hover {
-    animation: none;
-    transform: translateY(-5px) scale(1.02);
-    transition: all 0.3s ease;
+    transform: translateY(-5px) scale(1.03);
+    box-shadow: 
+        0 5px 15px rgba(0,0,0,0.2),
+        0 0 20px rgba(76, 175, 80, 0.15);
 }
 
 .card:focus {
@@ -378,24 +379,26 @@ body::before {
 
 .card.matched .card-inner {
     box-shadow: 
-        0 0 20px rgba(76, 175, 80, 0.4),
-        0 0 40px rgba(76, 175, 80, 0.2),
-        0 0 60px rgba(76, 175, 80, 0.1);
-    animation: matchGlow 1.5s ease-in-out infinite alternate;
+        0 0 25px rgba(76, 175, 80, 0.5),
+        0 0 45px rgba(76, 175, 80, 0.3);
+    animation: matchGlow 2s ease-in-out infinite;
 }
 
 @keyframes matchGlow {
-    from {
+    0% {
         box-shadow: 
-            0 0 20px rgba(76, 175, 80, 0.4),
-            0 0 40px rgba(76, 175, 80, 0.2),
-            0 0 60px rgba(76, 175, 80, 0.1);
+            0 0 25px rgba(76, 175, 80, 0.5),
+            0 0 45px rgba(76, 175, 80, 0.3);
     }
-    to {
+    50% {
         box-shadow: 
-            0 0 30px rgba(76, 175, 80, 0.6),
-            0 0 60px rgba(76, 175, 80, 0.3),
-            0 0 90px rgba(76, 175, 80, 0.2);
+            0 0 35px rgba(76, 175, 80, 0.7),
+            0 0 60px rgba(76, 175, 80, 0.4);
+    }
+    100% {
+        box-shadow: 
+            0 0 25px rgba(76, 175, 80, 0.5),
+            0 0 45px rgba(76, 175, 80, 0.3);
     }
 }
 
@@ -481,22 +484,63 @@ body::before {
     to { opacity: 1; }
 }
 
+@media (max-width: 1024px) {
+    .container {
+        padding: 5px;
+    }
+    
+    .game-board {
+        max-width: 450px;
+    }
+    
+    .card {
+        max-width: 90px;
+    }
+}
+
 @media (max-width: 768px) {
     .container {
         padding: 3px;
     }
     
-    .prizes {
-        gap: 3px;
+    .game-board {
+        max-width: 400px;
     }
     
-    .game-board {
-        gap: 3px;
-        padding: 3px;
-    }
-
     .card {
         max-width: 80px;
+    }
+    
+    .prize-card {
+        padding: 10px;
+    }
+    
+    .progress-box {
+        width: 25px;
+        height: 25px;
+    }
+}
+
+@media (max-width: 480px) {
+    .game-board {
+        max-width: 320px;
+    }
+    
+    .card {
+        max-width: 65px;
+    }
+    
+    .prize-card {
+        padding: 8px;
+    }
+    
+    .progress-box {
+        width: 20px;
+        height: 20px;
+    }
+    
+    .prize-card h3 {
+        font-size: 1em;
     }
 }
 
