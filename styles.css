@@ -61,9 +61,14 @@ body::before {
 
 .container {
     width: 100%;
-    max-width: 800px;
-    position: relative;
-    padding-top: 100px;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    min-height: 100vh;
+    justify-content: center;
 }
 
 .game-container {
@@ -73,19 +78,10 @@ body::before {
 }
 
 .prizes {
-    position: absolute;
-    top: 0;
-    left: 50%;
-    transform: translateX(-50%);
     display: flex;
-    gap: 20px;
-    padding: 20px;
-    background: rgba(0, 0, 0, 0.8);
-    border-radius: 15px;
-    box-shadow: 
-        0 10px 30px rgba(0, 0, 0, 0.3),
-        inset 0 0 20px rgba(255, 255, 255, 0.05);
-    backdrop-filter: blur(10px);
+    gap: 5px;
+    justify-content: center;
+    margin-bottom: 10px;
 }
 
 .prize-card {
@@ -161,34 +157,34 @@ body::before {
 }
 
 .prize-card[data-prize-value="5400"] .progress-box.filled {
-    background: linear-gradient(135deg, #54FF9F, #40CC80);
-    border-color: #54FF9F;
+    background: url('https://i.postimg.cc/nh2gXRj2/koala-button.png') center/cover;
+    border-color: #FFD700;
 }
 
 .prize-card[data-prize-value="3600"] .progress-box.filled {
-    background: linear-gradient(135deg, #7CFC00, #60C000);
-    border-color: #7CFC00;
+    background: url('https://i.postimg.cc/mrrqCY7s/image-Photoroom.png') center/cover;
+    border-color: #419644;
 }
 
 .prize-card[data-prize-value="2400"] .progress-box.filled {
-    background: linear-gradient(135deg, #ADFF2F, #8ACC20);
-    border-color: #ADFF2F;
+    background: url('https://i.postimg.cc/N0Pn4Kxr/ton.png') center/cover;
+    border-color: #4169E1;
 }
 
 .prize-card.won {
     background: linear-gradient(to bottom,
         rgba(26, 26, 26, 0.95),
-        rgba(84, 255, 159, 0.1)
+        rgba(76, 175, 80, 0.1)
     );
-    border: 2px solid #54FF9F;
+    border: 2px solid #4CAF50;
     transform: scale(1.02) translateZ(50px);
     animation: winPulse 2s ease-in-out infinite;
 }
 
 @keyframes winPulse {
-    0% { box-shadow: 0 0 20px rgba(84, 255, 159, 0.4); }
-    50% { box-shadow: 0 0 40px rgba(84, 255, 159, 0.6); }
-    100% { box-shadow: 0 0 20px rgba(84, 255, 159, 0.4); }
+    0% { box-shadow: 0 0 20px rgba(76, 175, 80, 0.4); }
+    50% { box-shadow: 0 0 40px rgba(76, 175, 80, 0.6); }
+    100% { box-shadow: 0 0 20px rgba(76, 175, 80, 0.4); }
 }
 
 .prize-placeholder {
@@ -249,24 +245,30 @@ body::before {
 }
 
 .game-board {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 20px;
-    padding: 20px;
-    background: rgba(0, 0, 0, 0.8);
-    border-radius: 15px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-    max-width: 800px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 5px;
+    padding: 10px;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 20px;
+    box-shadow: 
+        0 10px 30px rgba(0, 0, 0, 0.3),
+        inset 0 0 20px rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    max-width: 600px;
+    width: 100%;
     margin: 0 auto;
 }
 
 .card {
-    width: calc(25% - 20px);
     aspect-ratio: 3/4;
-    margin: 10px;
-    perspective: 1000px;
+    position: relative;
     cursor: pointer;
+    transform-style: preserve-3d;
+    transition: all 0.6s cubic-bezier(0.4, 0.0, 0.2, 1);
+    width: 100%;
+    max-width: 120px;
+    margin: 0 auto;
 }
 
 .card:not(.flipped):not(.matched):hover {
@@ -301,8 +303,10 @@ body::before {
     width: 100%;
     height: 100%;
     text-align: center;
-    transition: transform 0.6s;
+    transition: transform 0.8s;
     transform-style: preserve-3d;
+    cursor: pointer;
+    transform: rotateY(0deg);
 }
 
 .card.flipped .card-inner {
@@ -314,46 +318,62 @@ body::before {
     width: 100%;
     height: 100%;
     backface-visibility: hidden;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
 
-.card[data-type="1"] .card-front {
-    background: #54FF9F;
-    border: 2px solid rgba(84, 255, 159, 0.8);
-}
-
-.card[data-type="2"] .card-front {
-    background: #7CFC00;
-    border: 2px solid rgba(124, 252, 0, 0.8);
-}
-
-.card[data-type="3"] .card-front {
-    background: #ADFF2F;
-    border: 2px solid rgba(173, 255, 47, 0.8);
-}
-
-.card .card-front {
+.card-front {
+    background: #1E90FF;
+    border: 2px solid rgba(255,255,255,0.1);
     transform: rotateY(180deg);
-    background-size: cover;
-    background-position: center;
-    border-radius: 10px;
-    box-shadow: 
-        0 0 15px rgba(255, 255, 255, 0.1),
-        inset 0 0 15px rgba(255, 255, 255, 0.1);
 }
 
-.card .card-back {
-    background: linear-gradient(135deg, #2a2a2a 0%, #3a3a3a 100%);
-    border: 2px solid rgba(255, 255, 255, 0.1);
-    border-radius: 10px;
+.card[data-type="1"].flipped .card-front {
+    background: url('https://i.postimg.cc/nh2gXRj2/koala-button.png') center/100% no-repeat;
+}
+
+.card[data-type="2"].flipped .card-front {
+    background: url('https://i.postimg.cc/mrrqCY7s/image-Photoroom.png') center/100% no-repeat;
+}
+
+.card[data-type="3"].flipped .card-front {
+    background: url('https://i.postimg.cc/N0Pn4Kxr/ton.png') center/100% no-repeat;
+}
+
+.card-back {
+    background: #4CAF50;
+    border: 2px solid rgba(255,255,255,0.3);
+    transform: rotateY(0deg);
+    position: relative;
+    overflow: hidden;
+    box-shadow: 
+        0 4px 8px rgba(0,0,0,0.2),
+        inset 0 0 20px rgba(255, 255, 255, 0.1);
+}
+
+.card-back::before {
+    content: '';
     position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
-    backface-visibility: hidden;
-    cursor: pointer;
-    transition: transform 0.6s;
-    box-shadow: 
-        0 4px 8px rgba(0, 0, 0, 0.2),
-        inset 0 0 15px rgba(255, 255, 255, 0.1);
+    background: linear-gradient(
+        to bottom,
+        rgba(255,255,255,0.1) 0%,
+        rgba(0,0,0,0.1) 100%
+    );
+}
+
+.card-back::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url('https://i.postimg.cc/nh2gXRj2/koala-button.png') center/80% no-repeat;
+    z-index: 2;
 }
 
 .card.matched .card-inner {
@@ -463,18 +483,20 @@ body::before {
 
 @media (max-width: 768px) {
     .container {
-        padding-top: 150px;
+        padding: 5px;
     }
     
     .prizes {
-        flex-direction: column;
-        width: 90%;
+        gap: 5px;
     }
     
     .game-board {
-        grid-template-columns: repeat(3, 1fr);
-        gap: 15px;
-        padding: 15px;
+        gap: 5px;
+        padding: 5px;
+    }
+
+    .card {
+        max-width: 90px;
     }
 }
 
@@ -677,4 +699,13 @@ body::before {
 .tutorial-close:hover {
     transform: translateY(-2px);
     box-shadow: 0 5px 15px rgba(76, 175, 80, 0.4);
+}
+
+@keyframes rotateGradient {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
 } 
