@@ -82,10 +82,90 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     function showWinPopup(amount) {
+        // Сразу показываем выигрыш
         winAmount.textContent = amount;
         winPopup.classList.add('show');
         overlay.classList.add('show');
         canFlip = false;
+        
+        // Изменяем текст кнопки
+        const playAgainBtn = winPopup.querySelector('button');
+        playAgainBtn.textContent = 'Начать заново';
+        
+        // Меняем обработчик кнопки
+        playAgainBtn.onclick = () => {
+            // Показываем экран рекламы
+            const adScreen = document.createElement('div');
+            adScreen.className = 'start-screen';
+            adScreen.innerHTML = `
+                <div class="start-content">
+                    <h2>Новая игра</h2>
+                    <p>Для начала новой игры посмотрите короткую рекламу</p>
+                    <button class="watch-ad-btn">Смотреть рекламу</button>
+                    <div class="ad-progress">
+                        <div class="ad-progress-bar"></div>
+                    </div>
+                    <div class="ad-timer">5</div>
+                    <button class="close-ad-btn" style="
+                        margin-top: 20px;
+                        background: transparent;
+                        border: 1px solid #4CAF50;
+                        padding: 10px 20px;
+                        color: #4CAF50;
+                        cursor: pointer;
+                        border-radius: 20px;
+                    ">Закрыть</button>
+                </div>
+            `;
+            document.body.appendChild(adScreen);
+
+            const closeBtn = adScreen.querySelector('.close-ad-btn');
+            closeBtn.addEventListener('click', () => {
+                adScreen.remove();
+                winPopup.classList.add('show');
+                overlay.classList.add('show');
+            });
+
+            const adBtn = adScreen.querySelector('.watch-ad-btn');
+            const adProgress = adScreen.querySelector('.ad-progress');
+            const adProgressBar = adScreen.querySelector('.ad-progress-bar');
+            const adTimer = adScreen.querySelector('.ad-timer');
+
+            adBtn.addEventListener('click', () => {
+                adBtn.style.display = 'none';
+                closeBtn.style.display = 'none';
+                adProgress.style.display = 'block';
+                adTimer.style.display = 'block';
+
+                const totalTime = 5;
+                let timeLeft = totalTime;
+                adTimer.textContent = timeLeft;
+
+                const interval = setInterval(() => {
+                    const elapsed = totalTime - timeLeft;
+                    const progress = (elapsed / totalTime) * 100;
+                    adProgressBar.style.width = `${progress}%`;
+
+                    if (progress >= 100) {
+                        clearInterval(interval);
+                        adScreen.remove();
+                        restartGame();
+                    }
+                }, 10);
+
+                const timer = setInterval(() => {
+                    timeLeft--;
+                    adTimer.textContent = timeLeft;
+
+                    if (timeLeft <= 0) {
+                        clearInterval(timer);
+                        clearInterval(interval);
+                        adScreen.remove();
+                        restartGame();
+                    }
+                }, 1000);
+            });
+        };
     }
     
     function startCheckInterval() {
@@ -191,4 +271,80 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Показываем туториал при первом запуске
     showTutorial();
+
+    // Начальный экран и реклама
+    const startScreen = document.querySelector('.start-screen');
+    const watchAdBtn = document.querySelector('.watch-ad-btn');
+    const adProgress = document.querySelector('.ad-progress');
+    const adProgressBar = document.querySelector('.ad-progress-bar');
+    const adTimer = document.querySelector('.ad-timer');
+    const gameBoard = document.querySelector('.game-board');
+
+    // Скрываем игровое поле при загрузке
+    gameBoard.style.opacity = '0';
+    gameBoard.style.pointerEvents = 'none';
+
+    watchAdBtn.addEventListener('click', () => {
+        // Скрываем кнопку и показываем прогресс
+        watchAdBtn.style.display = 'none';
+        adProgress.style.display = 'block';
+        adTimer.style.display = 'block';
+        
+        const totalTime = 5; // Общее время в секундах
+        let timeLeft = totalTime;
+        adTimer.textContent = timeLeft;
+        
+        // Обновляем таймер и прогресс-бар каждые 10мс для плавности
+        const interval = setInterval(() => {
+            const elapsed = totalTime - timeLeft;
+            const progress = (elapsed / totalTime) * 100;
+            
+            adProgressBar.style.width = `${progress}%`;
+            
+            if (progress >= 100) {
+                clearInterval(interval);
+                startGame();
+            }
+        }, 10);
+        
+        // Обновляем таймер каждую секунду
+        const timer = setInterval(() => {
+            timeLeft--;
+            adTimer.textContent = timeLeft;
+            
+            if (timeLeft <= 0) {
+                clearInterval(timer);
+                clearInterval(interval);
+                startGame();
+            }
+        }, 1000);
+    });
+
+    function startGame() {
+        // Плавно скрываем начальный экран
+        startScreen.classList.add('hidden');
+        
+        // Показываем игровое поле
+        setTimeout(() => {
+            gameBoard.style.opacity = '1';
+            gameBoard.style.pointerEvents = 'auto';
+            gameBoard.classList.add('visible');
+            
+            // Добавляем эффект появления карточек
+            const cards = document.querySelectorAll('.card');
+            cards.forEach((card, index) => {
+                setTimeout(() => {
+                    card.style.transform = 'scale(1)';
+                    card.style.opacity = '1';
+                }, index * 50);
+            });
+        }, 500);
+    }
+
+    // Добавляем начальные стили для карточек
+    document.querySelectorAll('.card').forEach(card => {
+        card.style.transform = 'scale(0.8)';
+        card.style.opacity = '0';
+        card.style.transition = 'all 0.3s ease-out';
+    });
 }); 
