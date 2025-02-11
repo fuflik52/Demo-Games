@@ -63,10 +63,10 @@ body::before {
     width: 100%;
     max-width: 1200px;
     margin: 0 auto;
-    padding: 20px;
+    padding: 10px;
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 10px;
     min-height: 100vh;
     justify-content: center;
 }
@@ -79,9 +79,9 @@ body::before {
 
 .prizes {
     display: flex;
-    gap: 5px;
+    gap: 3px;
     justify-content: center;
-    margin-bottom: 10px;
+    margin-bottom: 5px;
 }
 
 .prize-card {
@@ -247,15 +247,15 @@ body::before {
 .game-board {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 5px;
-    padding: 10px;
+    gap: 3px;
+    padding: 3px;
     background: rgba(0, 0, 0, 0.3);
     border-radius: 20px;
     box-shadow: 
         0 10px 30px rgba(0, 0, 0, 0.3),
         inset 0 0 20px rgba(255, 255, 255, 0.05);
     backdrop-filter: blur(10px);
-    max-width: 600px;
+    max-width: 500px;
     width: 100%;
     margin: 0 auto;
 }
@@ -267,8 +267,8 @@ body::before {
     transform-style: preserve-3d;
     transition: all 0.6s cubic-bezier(0.4, 0.0, 0.2, 1);
     width: 100%;
-    max-width: 120px;
-    margin: 0 auto;
+    max-width: 100px;
+    margin: 0;
 }
 
 .card:not(.flipped):not(.matched):hover {
@@ -483,20 +483,20 @@ body::before {
 
 @media (max-width: 768px) {
     .container {
-        padding: 5px;
+        padding: 3px;
     }
     
     .prizes {
-        gap: 5px;
+        gap: 3px;
     }
     
     .game-board {
-        gap: 5px;
-        padding: 5px;
+        gap: 3px;
+        padding: 3px;
     }
 
     .card {
-        max-width: 90px;
+        max-width: 80px;
     }
 }
 
