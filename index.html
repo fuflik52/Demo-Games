@@ -3,142 +3,185 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Карточная игра</title>
+    <title>Коала Удачи - Слот-машина</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
-<body>
-    <div class="container">
-        <div class="prizes">
-            <div class="prize-card" id="prize1" data-prize-value="5400">
-                <h3>
-                    <img src="https://i.postimg.cc/nVWW79L8/leaf-card.png" alt="Currency" class="currency-icon">
-                    5400
-                </h3>
-                <div class="prize-progress">
-                    <div class="progress-box"></div>
-                    <div class="progress-box"></div>
-                    <div class="progress-box"></div>
-                </div>
-            </div>
-            <div class="prize-card" id="prize2" data-prize-value="3600">
-                <h3>
-                    <img src="https://i.postimg.cc/nVWW79L8/leaf-card.png" alt="Currency" class="currency-icon">
-                    3600
-                </h3>
-                <div class="prize-progress">
-                    <div class="progress-box"></div>
-                    <div class="progress-box"></div>
-                    <div class="progress-box"></div>
-                </div>
-            </div>
-            <div class="prize-card" id="prize3" data-prize-value="2400">
-                <h3>
-                    <img src="https://i.postimg.cc/nVWW79L8/leaf-card.png" alt="Currency" class="currency-icon">
-                    2400
-                </h3>
-                <div class="prize-progress">
-                    <div class="progress-box"></div>
-                    <div class="progress-box"></div>
-                    <div class="progress-box"></div>
-                </div>
-            </div>
+<body class="theme-dark">
+    <div class="game-container">
+        <!-- Кнопка настроек -->
+        <button id="settingsButton" class="settings-button">
+            <i class="fas fa-cog"></i>
+        </button>
+
+        <!-- Бесплатные вращения -->
+        <div id="freeSpins" class="free-spins" style="display: none;">
+            БЕСПЛАТНЫХ ВРАЩЕНИЙ: <span id="freeSpinsCount">0</span>
+        </div>
+
+        <!-- Кнопка комбинаций -->
+        <button id="showCombosButton" class="combo-button">ВОЗМОЖНЫЕ ВЫИГРЫШИ</button>
+
+        <div class="balance-container">
+            <h2>Баланс: <span id="balance">10000</span></h2>
         </div>
         
-        <div class="game-board">
-            <div class="card" data-type="1" data-prize-id="prize1">
-                <div class="card-inner">
-                    <div class="card-front"></div>
-                    <div class="card-back"></div>
-                </div>
+        <div class="slot-machine">
+            <div class="win-line"></div>
+            <div class="reels">
+                <div class="reel" id="reel1"></div>
+                <div class="reel" id="reel2"></div>
+                <div class="reel" id="reel3"></div>
             </div>
-            <div class="card" data-type="1" data-prize-id="prize1">
-                <div class="card-inner">
-                    <div class="card-front"></div>
-                    <div class="card-back"></div>
-                </div>
+        </div>
+
+        <div class="controls">
+            <button id="spinButton" class="spin-button">КРУТИТЬ (100 монет)</button>
+            <div class="control-panel">
+                <select id="spinCount">
+                    <option value="1">1 спин</option>
+                    <option value="5">5 спинов</option>
+                    <option value="10">10 спинов</option>
+                    <option value="20">20 спинов</option>
+                </select>
+                <button id="turboMode">ТУРБО РЕЖИМ</button>
             </div>
-            <div class="card" data-type="1" data-prize-id="prize1">
-                <div class="card-inner">
-                    <div class="card-front"></div>
-                    <div class="card-back"></div>
-                </div>
+            <div id="winMessage" class="win-message"></div>
+        </div>
+    </div>
+
+    <!-- Модальное окно настроек -->
+    <div id="settingsModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <div class="settings-tabs">
+                <button class="tab-button active" data-tab="settingsTab">Настройки</button>
+                <button class="tab-button" data-tab="statsTab">Статистика</button>
+                <button class="tab-button" data-tab="achievementsTab">Достижения</button>
             </div>
-            <div class="card" data-type="2" data-prize-id="prize2">
-                <div class="card-inner">
-                    <div class="card-front"></div>
-                    <div class="card-back"></div>
+            <div class="tab-content">
+                <div id="settingsTab" class="tab-pane active" data-tab="settingsTab">
+                    <div class="settings-grid">
+                        <div class="setting-item">
+                            <h3>Тема</h3>
+                            <select id="themeSelect">
+                                <option value="dark">Темная</option>
+                                <option value="light">Светлая</option>
+                                <option value="neon">Неон</option>
+                            </select>
+                        </div>
+                        <div class="setting-item">
+                            <h3>Эффекты</h3>
+                            <label>
+                                <input type="checkbox" id="particlesEffect" checked>
+                                Частицы
+                            </label>
+                            <label>
+                                <input type="checkbox" id="glowEffect" checked>
+                                Свечение
+                            </label>
+                            <label>
+                                <input type="checkbox" id="three-d-effect" checked>
+                                3D эффекты
+                            </label>
+                        </div>
+                        <div class="setting-item">
+                            <h3>Скорость анимации</h3>
+                            <input type="range" id="animationSpeed" min="0.5" max="2" step="0.1" value="1">
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <div class="card" data-type="2" data-prize-id="prize2">
-                <div class="card-inner">
-                    <div class="card-front"></div>
-                    <div class="card-back"></div>
+                <div id="statsTab" class="tab-pane" data-tab="statsTab">
+                    <div class="stats-panel">
+                        <div class="stat-item">
+                            <h3>Всего спинов</h3>
+                            <div id="totalSpins" class="stat-value">0</div>
+                        </div>
+                        <div class="stat-item">
+                            <h3>Всего выигрышей</h3>
+                            <div id="totalWins" class="stat-value">0</div>
+                        </div>
+                        <div class="stat-item">
+                            <h3>Крупнейший выигрыш</h3>
+                            <div id="biggestWin" class="stat-value">0</div>
+                        </div>
+                        <div class="stat-item">
+                            <h3>Процент выигрышей</h3>
+                            <div id="winRate" class="stat-value">0%</div>
+                        </div>
+                    </div>
+                    <div class="win-history">
+                        <h3>История выигрышей</h3>
+                        <div id="winHistoryList" class="history-list"></div>
+                    </div>
                 </div>
-            </div>
-            <div class="card" data-type="2" data-prize-id="prize2">
-                <div class="card-inner">
-                    <div class="card-front"></div>
-                    <div class="card-back"></div>
-                </div>
-            </div>
-            <div class="card" data-type="3" data-prize-id="prize3">
-                <div class="card-inner">
-                    <div class="card-front"></div>
-                    <div class="card-back"></div>
-                </div>
-            </div>
-            <div class="card" data-type="3" data-prize-id="prize3">
-                <div class="card-inner">
-                    <div class="card-front"></div>
-                    <div class="card-back"></div>
-                </div>
-            </div>
-            <div class="card" data-type="3" data-prize-id="prize3">
-                <div class="card-inner">
-                    <div class="card-front"></div>
-                    <div class="card-back"></div>
-                </div>
-            </div>
-            <div class="card" data-type="3" data-prize-id="prize3">
-                <div class="card-inner">
-                    <div class="card-front"></div>
-                    <div class="card-back"></div>
-                </div>
-            </div>
-            <div class="card" data-type="2" data-prize-id="prize2">
-                <div class="card-inner">
-                    <div class="card-front"></div>
-                    <div class="card-back"></div>
-                </div>
-            </div>
-            <div class="card" data-type="1" data-prize-id="prize1">
-                <div class="card-inner">
-                    <div class="card-front"></div>
-                    <div class="card-back"></div>
+                <div id="achievementsTab" class="tab-pane" data-tab="achievementsTab">
+                    <div class="achievements-list">
+                        <!-- Достижения будут добавляться динамически через JavaScript -->
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="overlay"></div>
-    <div class="win-popup">
-        <h2>Поздравляем!</h2>
-        <p>Вы выиграли <span class="win-amount">0</span>!</p>
-        <button onclick="restartGame()">Начать заново</button>
-    </div>
-
-    <div class="start-screen">
-        <div class="start-content">
-            <h2>Добро пожаловать в игру!</h2>
-            <p>Чтобы начать игру и получить возможность выиграть призы, посмотрите короткую рекламу</p>
-            <button class="watch-ad-btn">Смотреть рекламу</button>
-            <div class="ad-progress">
-                <div class="ad-progress-bar"></div>
+    <!-- Модальное окно с комбинациями -->
+    <div id="combosModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <h2>Возможные комбинации</h2>
+            <div class="combinations">
+                <div class="combo">
+                    <div class="combo-images">
+                        <img src="https://i.postimg.cc/LsWTwZqz/image.png">
+                        <img src="https://i.postimg.cc/LsWTwZqz/image.png">
+                        <img src="https://i.postimg.cc/LsWTwZqz/image.png">
+                    </div>
+                    <p>x50 (Джекпот)</p>
+                </div>
+                <div class="combo">
+                    <div class="combo-images">
+                        <img src="https://i.postimg.cc/KjS5vSDj/image.png">
+                        <img src="https://i.postimg.cc/KjS5vSDj/image.png">
+                        <img src="https://i.postimg.cc/KjS5vSDj/image.png">
+                    </div>
+                    <p>x30 (Крупный выигрыш)</p>
+                </div>
+                <div class="combo">
+                    <div class="combo-images">
+                        <img src="https://i.postimg.cc/wMXQ1fwV/image.png">
+                        <img src="https://i.postimg.cc/wMXQ1fwV/image.png">
+                        <img src="https://i.postimg.cc/wMXQ1fwV/image.png">
+                    </div>
+                    <p>x20 (Средний выигрыш)</p>
+                </div>
+                <div class="combo">
+                    <div class="combo-images">
+                        <img src="https://i.postimg.cc/9QFYfBZd/image.png">
+                        <img src="https://i.postimg.cc/9QFYfBZd/image.png">
+                        <img src="https://i.postimg.cc/9QFYfBZd/image.png">
+                    </div>
+                    <p>x15 (Малый выигрыш)</p>
+                </div>
+                <div class="combo">
+                    <div class="combo-images">
+                        <img src="https://i.postimg.cc/TPBVCMS0/image.png">
+                        <img src="https://i.postimg.cc/TPBVCMS0/image.png">
+                        <img src="https://i.postimg.cc/TPBVCMS0/image.png">
+                    </div>
+                    <p>x10 (Мини-выигрыш)</p>
+                </div>
+                <div class="combo">
+                    <div class="combo-images">
+                        <img src="https://i.postimg.cc/LsWTwZqz/image.png">
+                        <img src="https://i.postimg.cc/LsWTwZqz/image.png">
+                        <div class="empty-slot">?</div>
+                    </div>
+                    <p>x5 (Два символа)</p>
+                </div>
             </div>
-            <div class="ad-timer">5</div>
         </div>
     </div>
 
-    <script src="script.js"></script>
+    <script src="slot-machine.js"></script>
 </body>
 </html> 
