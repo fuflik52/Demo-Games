@@ -1,0 +1,92 @@
+/* Анимации для баланса */
+@keyframes balanceIncrease {
+    0% { 
+        color: #4CAF50;
+        transform: scale(1);
+        text-shadow: 0 0 10px rgba(76, 175, 80, 0.5);
+    }
+    50% { 
+        color: #FFD700;
+        transform: scale(1.2);
+        text-shadow: 
+            0 0 20px rgba(255, 215, 0, 0.5),
+            0 0 40px rgba(255, 215, 0, 0.3);
+    }
+    100% { 
+        color: white;
+        transform: scale(1);
+        text-shadow: none;
+    }
+}
+
+@keyframes balanceDecrease {
+    0% { 
+        color: #ff4444;
+        transform: scale(1);
+        text-shadow: 0 0 10px rgba(255, 68, 68, 0.5);
+    }
+    50% { 
+        color: #ff0000;
+        transform: scale(0.9);
+        text-shadow: 
+            0 0 20px rgba(255, 0, 0, 0.5),
+            0 0 40px rgba(255, 0, 0, 0.3);
+    }
+    100% { 
+        color: white;
+        transform: scale(1);
+        text-shadow: none;
+    }
+}
+
+#balance.increase {
+    animation: balanceIncrease 1s ease-out;
+}
+
+#balance.decrease {
+    animation: balanceDecrease 1s ease-out;
+}
+
+.balance-container.increase {
+    animation: balanceContainerIncrease 1s ease-out;
+}
+
+.balance-container.decrease {
+    animation: balanceContainerDecrease 1s ease-out;
+}
+
+@keyframes balanceContainerIncrease {
+    0% { 
+        box-shadow: 
+            0 4px 15px rgba(0, 0, 0, 0.2),
+            inset 0 0 20px rgba(76, 175, 80, 0.2);
+    }
+    50% { 
+        box-shadow: 
+            0 4px 25px rgba(76, 175, 80, 0.4),
+            inset 0 0 30px rgba(76, 175, 80, 0.3);
+    }
+    100% { 
+        box-shadow: 
+            0 4px 15px rgba(0, 0, 0, 0.2),
+            inset 0 0 20px rgba(255, 255, 255, 0.1);
+    }
+}
+
+@keyframes balanceContainerDecrease {
+    0% { 
+        box-shadow: 
+            0 4px 15px rgba(0, 0, 0, 0.2),
+            inset 0 0 20px rgba(255, 68, 68, 0.2);
+    }
+    50% { 
+        box-shadow: 
+            0 4px 25px rgba(255, 68, 68, 0.4),
+            inset 0 0 30px rgba(255, 68, 68, 0.3);
+    }
+    100% { 
+        box-shadow: 
+            0 4px 15px rgba(0, 0, 0, 0.2),
+            inset 0 0 20px rgba(255, 255, 255, 0.1);
+    }
+} 

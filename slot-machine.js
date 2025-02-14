@@ -2,7 +2,7 @@ class SlotMachine {
     constructor() {
         console.log('Инициализация слот-машины...');
         this.symbols = [
-            { id: 1, url: 'https://i.postimg.cc/LsWTwZqz/image.png', value: 500, isWild: false },
+            { id: 1, url: 'https://i.postimg.cc/c4MN4hZ4/dollar-circle-2x.png', value: 100, isWild: true },
             { id: 2, url: 'https://i.postimg.cc/KjS5vSDj/image.png', value: 400, isWild: false },
             { id: 3, url: 'https://i.postimg.cc/wMXQ1fwV/image.png', value: 300, isWild: false },
             { id: 4, url: 'https://i.postimg.cc/9QFYfBZd/image.png', value: 200, isWild: false },
@@ -457,16 +457,66 @@ class SlotMachine {
     }
 
     updateBalance(amount) {
+        const balanceElement = document.getElementById('balance');
+        const balanceContainer = document.querySelector('.balance-container');
+        const oldBalance = this.balance;
         this.balance += amount;
-        this.balanceElement.textContent = this.balance;
+
+        // Сначала удаляем старые классы анимации
+        balanceElement.classList.remove('increase', 'decrease');
+        balanceContainer.classList.remove('increase', 'decrease');
+
+        // Принудительно вызываем reflow для сброса анимации
+        void balanceElement.offsetWidth;
+        void balanceContainer.offsetWidth;
+
+        // Добавляем новые классы анимации
+        if (amount > 0) {
+            balanceElement.classList.add('increase');
+            balanceContainer.classList.add('increase');
+        } else if (amount < 0) {
+            balanceElement.classList.add('decrease');
+            balanceContainer.classList.add('decrease');
+        }
+
+        // Анимируем изменение числа
+        const duration = 1000; // 1 секунда
+        const start = oldBalance;
+        const end = this.balance;
+        const startTime = performance.now();
+
+        const animate = (currentTime) => {
+            const elapsed = currentTime - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+
+            // Используем функцию плавности для более естественной анимации
+            const easeProgress = 1 - Math.pow(1 - progress, 3);
+            const current = Math.round(start + (end - start) * easeProgress);
+            
+            balanceElement.textContent = current;
+
+            if (progress < 1) {
+                requestAnimationFrame(animate);
+            } else {
+                // Удаляем классы анимации после завершения
+                setTimeout(() => {
+                    balanceElement.classList.remove('increase', 'decrease');
+                    balanceContainer.classList.remove('increase', 'decrease');
+                }, 1000);
+            }
+        };
+
+        requestAnimationFrame(animate);
+        
+        // Обновляем состояние кнопки
         this.spinButton.disabled = this.balance < this.spinCost;
         
-        // Обновляем текст кнопки спина с учетом выбранного количества спинов
+        // Обновляем текст кнопки спина
         const spinCount = document.getElementById('spinCount');
         if (spinCount) {
             const count = parseInt(spinCount.value);
             const totalCost = this.spinCost * count;
-            this.spinButton.textContent = `КРУТИТЬ ${count} РАЗ (${totalCost} МОНЕТ)`;
+            this.spinButton.innerHTML = `КРУТИТЬ ${count} РАЗ <img src="https://i.postimg.cc/FFx7T4Bh/image.png" alt="${totalCost} монет" class="coin-icon">`;
         }
     }
 
@@ -778,8 +828,8 @@ class SlotMachine {
             const totalCost = this.bonusSystem.freeSpins > 0 ? 0 : this.spinCost * count;
             const buttonText = this.bonusSystem.freeSpins > 0 ? 
                 `КРУТИТЬ (БЕСПЛАТНО ${this.bonusSystem.freeSpins})` : 
-                `КРУТИТЬ ${count} РАЗ (${totalCost} МОНЕТ)`;
-            this.spinButton.textContent = buttonText;
+                `КРУТИТЬ ${count} РАЗ <img src="https://i.postimg.cc/FFx7T4Bh/image.png" alt="${totalCost} монет" class="coin-icon">`;
+            this.spinButton.innerHTML = buttonText;
         }
     }
 
