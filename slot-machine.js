@@ -2,12 +2,13 @@ class SlotMachine {
     constructor() {
         console.log('Инициализация слот-машины...');
         this.symbols = [
-            { id: 1, url: 'https://i.postimg.cc/c4MN4hZ4/dollar-circle-2x.png', value: 100, isWild: true },
-            { id: 2, url: 'https://i.postimg.cc/KjS5vSDj/image.png', value: 400, isWild: false },
-            { id: 3, url: 'https://i.postimg.cc/wMXQ1fwV/image.png', value: 300, isWild: false },
-            { id: 4, url: 'https://i.postimg.cc/9QFYfBZd/image.png', value: 200, isWild: false },
-            { id: 5, url: 'https://i.postimg.cc/TPBVCMS0/image.png', value: 100, isWild: false },
-            { id: 6, url: 'https://i.postimg.cc/LsWTwZqz/image.png', value: 1000, isWild: true }
+            { id: 1, url: 'https://i.postimg.cc/Sx6q5nWX/aa58afaa-c9b3-42bb-a874-c24862f1e816-Photoroom.png', value: -1000, isWild: false },
+            { id: 2, url: 'https://i.postimg.cc/VN4wf2Zm/3510d7ef-b9a1-4d82-a89a-b6bb56e261a7-Photoroom.png', value: 800, isWild: false },
+            { id: 3, url: 'https://i.postimg.cc/pTTHpk38/16d8a086-b16c-4f7d-8636-e7f84361d5bd-Photoroom.png', value: 600, isWild: false },
+            { id: 4, url: 'https://i.postimg.cc/PxRkZYk7/4a0953c3-7ae5-4a3a-8b35-384772a6fb14-Photoroom.png', value: 400, isWild: false },
+            { id: 5, url: 'https://i.postimg.cc/rFtq1nsN/61643317-46fa-4e3d-b461-0da0934c5dac-Photoroom.png', value: 200, isWild: false },
+            { id: 6, url: 'https://i.postimg.cc/Mp2qd7j2/cartoon-koala-bear-wearing-hat-scarf-sitting-ground-generative-ai-974539-58351-Photoroom.png', value: 100, isWild: false },
+            { id: 7, url: 'https://i.postimg.cc/R0v9zvRg/im-5d071b31-39b0-46a1-8b17-dcb37e7b4118-Photoroom.png', value: 50, isWild: false }
         ];
         
         // Бонусная система
@@ -312,7 +313,17 @@ class SlotMachine {
         const [first, second, third] = results;
         let winAmount = 0;
         let winType = '';
-        let hasWild = results.some(r => r.isWild);
+        
+        // Проверяем на наличие символа с отрицательным значением
+        const negativeSymbol = results.find(r => r.value < 0);
+        if (negativeSymbol) {
+            winAmount = negativeSymbol.value;
+            winType = 'ПОТЕРЯ';
+            this.updateBalance(winAmount);
+            this.showWinEffects(winType, winAmount);
+            this.lastWin = false;
+            return;
+        }
         
         // Проверка на выигрыш с учетом Wild символов
         if (this.isWinningCombination(results)) {
@@ -431,21 +442,26 @@ class SlotMachine {
     }
 
     showWinMessage(message, amount) {
-        if (amount <= 0) return;
+        if (amount === 0) return;
+        
+        const isLoss = amount < 0;
+        const displayAmount = Math.abs(amount);
+        const displayMessage = isLoss ? `${message} -${displayAmount}` : `${message} +${displayAmount}`;
         
         if (this.isTurboMode) {
             // Создаем быстрое уведомление для турбо режима
             const turboMessage = document.createElement('div');
             turboMessage.className = 'turbo-win-message';
-            turboMessage.textContent = `${message} +${amount}`;
+            turboMessage.textContent = displayMessage;
+            if (isLoss) turboMessage.style.color = '#ff4444';
             document.body.appendChild(turboMessage);
             
             setTimeout(() => {
                 turboMessage.remove();
             }, 1000);
         } else {
-            this.winMessage.textContent = `${message} +${amount}`;
-            this.winMessage.style.color = '#FFD700';
+            this.winMessage.textContent = displayMessage;
+            this.winMessage.style.color = isLoss ? '#ff4444' : '#FFD700';
             this.winMessage.style.opacity = '1';
             this.winMessage.style.animation = 'win-pulse 1.5s ease-in-out';
             
@@ -547,11 +563,13 @@ class SlotMachine {
     }
 
     getWinType(amount) {
-        if (amount >= 500) return 'ДЖЕКПОТ!';
+        if (amount >= 1000) return 'МЕГА ДЖЕКПОТ!';
+        if (amount >= 800) return 'СУПЕР ДЖЕКПОТ!';
+        if (amount >= 600) return 'ДЖЕКПОТ!';
         if (amount >= 400) return 'КРУПНЫЙ ВЫИГРЫШ!';
-        if (amount >= 300) return 'СРЕДНИЙ ВЫИГРЫШ!';
-        if (amount >= 200) return 'МАЛЫЙ ВЫИГРЫШ!';
-        if (amount >= 100) return 'МИНИ-ВЫИГРЫШ!';
+        if (amount >= 200) return 'СРЕДНИЙ ВЫИГРЫШ!';
+        if (amount >= 100) return 'МАЛЫЙ ВЫИГРЫШ!';
+        if (amount >= 50) return 'МИНИ-ВЫИГРЫШ!';
         return 'ПОПРОБУЙТЕ ЕЩЕ РАЗ!';
     }
 
@@ -598,7 +616,18 @@ class SlotMachine {
         if (threeDEffect) threeDEffect.checked = this.effects['three-d'];
 
         const speedInput = document.getElementById('animationSpeed');
-        if (speedInput) speedInput.value = this.animationSpeed;
+        if (speedInput) {
+            speedInput.value = this.animationSpeed;
+            speedInput.addEventListener('input', (e) => {
+                this.animationSpeed = parseFloat(e.target.value);
+                this.updateAnimationSpeed();
+                // Обновляем отображение текущего значения
+                const speedLabel = speedInput.closest('.setting-item').querySelector('h3');
+                if (speedLabel) {
+                    speedLabel.setAttribute('data-value', `${e.target.value}x`);
+                }
+            });
+        }
     }
 
     updateStats() {
@@ -672,6 +701,11 @@ class SlotMachine {
             speedInput.addEventListener('input', (e) => {
                 this.animationSpeed = parseFloat(e.target.value);
                 this.updateAnimationSpeed();
+                // Обновляем отображение текущего значения
+                const speedLabel = speedInput.closest('.setting-item').querySelector('h3');
+                if (speedLabel) {
+                    speedLabel.setAttribute('data-value', `${e.target.value}x`);
+                }
             });
         }
     }

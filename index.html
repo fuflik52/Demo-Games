@@ -83,7 +83,7 @@
                             </label>
                         </div>
                         <div class="setting-item">
-                            <h3>Скорость анимации</h3>
+                            <h3 data-value="1x">Скорость анимации</h3>
                             <input type="range" id="animationSpeed" min="0.5" max="2" step="0.1" value="1">
                         </div>
                     </div>
@@ -123,57 +123,65 @@
 
     <!-- Модальное окно с комбинациями -->
     <div id="combosModal" class="modal">
-        <div class="modal-content">
+        <div class="modal-content" style="max-height: 80vh; overflow-y: auto;">
             <span class="close-button">&times;</span>
             <h2>Возможные комбинации</h2>
             <div class="combinations">
                 <div class="combo">
                     <div class="combo-images">
-                        <img src="https://i.postimg.cc/c4MN4hZ4/dollar-circle-2x.png">
-                        <img src="https://i.postimg.cc/c4MN4hZ4/dollar-circle-2x.png">
-                        <img src="https://i.postimg.cc/c4MN4hZ4/dollar-circle-2x.png">
+                        <img src="https://i.postimg.cc/Sx6q5nWX/aa58afaa-c9b3-42bb-a874-c24862f1e816-Photoroom.png" style="background: transparent; width: 80px; height: 80px;">
+                        <img src="https://i.postimg.cc/Sx6q5nWX/aa58afaa-c9b3-42bb-a874-c24862f1e816-Photoroom.png" style="background: transparent; width: 80px; height: 80px;">
+                        <img src="https://i.postimg.cc/Sx6q5nWX/aa58afaa-c9b3-42bb-a874-c24862f1e816-Photoroom.png" style="background: transparent; width: 80px; height: 80px;">
                     </div>
-                    <p>x50 (Джекпот)</p>
+                    <p style="color: #ff4444;">-1000 (Потеря)</p>
                 </div>
                 <div class="combo">
                     <div class="combo-images">
-                        <img src="https://i.postimg.cc/KjS5vSDj/image.png">
-                        <img src="https://i.postimg.cc/KjS5vSDj/image.png">
-                        <img src="https://i.postimg.cc/KjS5vSDj/image.png">
+                        <img src="https://i.postimg.cc/VN4wf2Zm/3510d7ef-b9a1-4d82-a89a-b6bb56e261a7-Photoroom.png" style="background: transparent; width: 80px; height: 80px;">
+                        <img src="https://i.postimg.cc/VN4wf2Zm/3510d7ef-b9a1-4d82-a89a-b6bb56e261a7-Photoroom.png" style="background: transparent; width: 80px; height: 80px;">
+                        <img src="https://i.postimg.cc/VN4wf2Zm/3510d7ef-b9a1-4d82-a89a-b6bb56e261a7-Photoroom.png" style="background: transparent; width: 80px; height: 80px;">
                     </div>
-                    <p>x30 (Крупный выигрыш)</p>
+                    <p>x80 (Супер Джекпот)</p>
                 </div>
                 <div class="combo">
                     <div class="combo-images">
-                        <img src="https://i.postimg.cc/wMXQ1fwV/image.png">
-                        <img src="https://i.postimg.cc/wMXQ1fwV/image.png">
-                        <img src="https://i.postimg.cc/wMXQ1fwV/image.png">
+                        <img src="https://i.postimg.cc/pTTHpk38/16d8a086-b16c-4f7d-8636-e7f84361d5bd-Photoroom.png" style="background: transparent; width: 80px; height: 80px;">
+                        <img src="https://i.postimg.cc/pTTHpk38/16d8a086-b16c-4f7d-8636-e7f84361d5bd-Photoroom.png" style="background: transparent; width: 80px; height: 80px;">
+                        <img src="https://i.postimg.cc/pTTHpk38/16d8a086-b16c-4f7d-8636-e7f84361d5bd-Photoroom.png" style="background: transparent; width: 80px; height: 80px;">
+                    </div>
+                    <p>x60 (Джекпот)</p>
+                </div>
+                <div class="combo">
+                    <div class="combo-images">
+                        <img src="https://i.postimg.cc/PxRkZYk7/4a0953c3-7ae5-4a3a-8b35-384772a6fb14-Photoroom.png" style="background: transparent; width: 80px; height: 80px;">
+                        <img src="https://i.postimg.cc/PxRkZYk7/4a0953c3-7ae5-4a3a-8b35-384772a6fb14-Photoroom.png" style="background: transparent; width: 80px; height: 80px;">
+                        <img src="https://i.postimg.cc/PxRkZYk7/4a0953c3-7ae5-4a3a-8b35-384772a6fb14-Photoroom.png" style="background: transparent; width: 80px; height: 80px;">
+                    </div>
+                    <p>x40 (Крупный выигрыш)</p>
+                </div>
+                <div class="combo">
+                    <div class="combo-images">
+                        <img src="https://i.postimg.cc/rFtq1nsN/61643317-46fa-4e3d-b461-0da0934c5dac-Photoroom.png" style="background: transparent; width: 80px; height: 80px;">
+                        <img src="https://i.postimg.cc/rFtq1nsN/61643317-46fa-4e3d-b461-0da0934c5dac-Photoroom.png" style="background: transparent; width: 80px; height: 80px;">
+                        <img src="https://i.postimg.cc/rFtq1nsN/61643317-46fa-4e3d-b461-0da0934c5dac-Photoroom.png" style="background: transparent; width: 80px; height: 80px;">
                     </div>
                     <p>x20 (Средний выигрыш)</p>
                 </div>
                 <div class="combo">
                     <div class="combo-images">
-                        <img src="https://i.postimg.cc/9QFYfBZd/image.png">
-                        <img src="https://i.postimg.cc/9QFYfBZd/image.png">
-                        <img src="https://i.postimg.cc/9QFYfBZd/image.png">
+                        <img src="https://i.postimg.cc/Mp2qd7j2/cartoon-koala-bear-wearing-hat-scarf-sitting-ground-generative-ai-974539-58351-Photoroom.png" style="background: transparent; width: 80px; height: 80px;">
+                        <img src="https://i.postimg.cc/Mp2qd7j2/cartoon-koala-bear-wearing-hat-scarf-sitting-ground-generative-ai-974539-58351-Photoroom.png" style="background: transparent; width: 80px; height: 80px;">
+                        <img src="https://i.postimg.cc/Mp2qd7j2/cartoon-koala-bear-wearing-hat-scarf-sitting-ground-generative-ai-974539-58351-Photoroom.png" style="background: transparent; width: 80px; height: 80px;">
                     </div>
-                    <p>x15 (Малый выигрыш)</p>
+                    <p>x10 (Малый выигрыш)</p>
                 </div>
                 <div class="combo">
                     <div class="combo-images">
-                        <img src="https://i.postimg.cc/TPBVCMS0/image.png">
-                        <img src="https://i.postimg.cc/TPBVCMS0/image.png">
-                        <img src="https://i.postimg.cc/TPBVCMS0/image.png">
+                        <img src="https://i.postimg.cc/R0v9zvRg/im-5d071b31-39b0-46a1-8b17-dcb37e7b4118-Photoroom.png" style="background: transparent; width: 80px; height: 80px;">
+                        <img src="https://i.postimg.cc/R0v9zvRg/im-5d071b31-39b0-46a1-8b17-dcb37e7b4118-Photoroom.png" style="background: transparent; width: 80px; height: 80px;">
+                        <img src="https://i.postimg.cc/R0v9zvRg/im-5d071b31-39b0-46a1-8b17-dcb37e7b4118-Photoroom.png" style="background: transparent; width: 80px; height: 80px;">
                     </div>
-                    <p>x10 (Мини-выигрыш)</p>
-                </div>
-                <div class="combo">
-                    <div class="combo-images">
-                        <img src="https://i.postimg.cc/c4MN4hZ4/dollar-circle-2x.png">
-                        <img src="https://i.postimg.cc/c4MN4hZ4/dollar-circle-2x.png">
-                        <div class="empty-slot">?</div>
-                    </div>
-                    <p>x5 (Два символа)</p>
+                    <p>x5 (Мини-выигрыш)</p>
                 </div>
             </div>
         </div>
