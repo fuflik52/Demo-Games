@@ -8,6 +8,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body class="theme-dark">
+    <!-- Прогрессивный джекпот -->
+    <div class="progressive-jackpot">ДЖЕКПОТ: 10000</div>
+    
     <div class="game-container">
         <!-- Кнопка настроек -->
         <button id="settingsButton" class="settings-button">
@@ -83,8 +86,25 @@
                             </label>
                         </div>
                         <div class="setting-item">
-                            <h3 data-value="1x">Скорость анимации</h3>
-                            <input type="range" id="animationSpeed" min="0.5" max="2" step="0.1" value="1">
+                            <h3>Скорость барабанов</h3>
+                            <div class="speed-slider">
+                                <input type="range" id="reelsSpeed" min="0.1" max="2" step="0.1" value="1">
+                                <span class="speed-value">1x</span>
+                            </div>
+                        </div>
+                        <div class="setting-item">
+                            <h3>Скорость частиц</h3>
+                            <div class="speed-slider">
+                                <input type="range" id="particlesSpeed" min="0.1" max="2" step="0.1" value="1">
+                                <span class="speed-value">1x</span>
+                            </div>
+                        </div>
+                        <div class="setting-item">
+                            <h3>Скорость сообщений</h3>
+                            <div class="speed-slider">
+                                <input type="range" id="messagesSpeed" min="0.1" max="2" step="0.1" value="1">
+                                <span class="speed-value">1x</span>
+                            </div>
                         </div>
                     </div>
                 </div>

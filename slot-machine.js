@@ -104,6 +104,144 @@ class SlotMachine {
         if (!localStorage.getItem('tutorialCompleted')) {
             this.showTutorial();
         }
+
+        // Добавляем новые системы
+        this.jackpot = {
+            current: 10000,
+            increment: 0.01,
+            minWin: 5000,
+            lastUpdate: Date.now(),
+            save() {
+                localStorage.setItem('jackpot', JSON.stringify(this));
+            },
+            load() {
+                const saved = localStorage.getItem('jackpot');
+                if (saved) Object.assign(this, JSON.parse(saved));
+            },
+            update(bet) {
+                this.current += bet * this.increment;
+                this.save();
+                this.updateDisplay();
+            },
+            updateDisplay() {
+                const display = document.querySelector('.progressive-jackpot');
+                if (display) {
+                    display.textContent = `ДЖЕКПОТ: ${Math.floor(this.current)}`;
+                }
+            }
+        };
+
+        this.devicePerformance = {
+            fps: 60,
+            quality: 'high',
+            checkPerformance() {
+                const start = performance.now();
+                let frames = 0;
+                
+                const measure = (timestamp) => {
+                    frames++;
+                    if (timestamp - start >= 1000) {
+                        this.fps = frames;
+                        this.quality = this.fps > 30 ? 'high' : 'low';
+                        this.applyPerformanceSettings();
+                        return;
+                    }
+                    requestAnimationFrame(measure);
+                };
+                
+                requestAnimationFrame(measure);
+            },
+            applyPerformanceSettings() {
+                document.body.classList.toggle('low-performance', this.quality === 'low');
+            }
+        };
+
+        this.tutorials = {
+            steps: [
+                {
+                    element: '#spinButton',
+                    message: 'Нажмите для вращения барабанов',
+                    position: 'top'
+                },
+                {
+                    element: '.progressive-jackpot',
+                    message: 'Следите за ростом джекпота',
+                    position: 'bottom'
+                },
+                {
+                    element: '#animationSpeed',
+                    message: 'Настройте скорость анимации',
+                    position: 'left'
+                }
+            ],
+            shown: false,
+            currentStep: 0,
+            save() {
+                localStorage.setItem('tutorials', JSON.stringify({shown: this.shown}));
+            },
+            showNext() {
+                if (this.currentStep >= this.steps.length) {
+                    this.shown = true;
+                    this.save();
+                    return;
+                }
+                
+                const step = this.steps[this.currentStep];
+                const element = document.querySelector(step.element);
+                if (!element) return;
+                
+                this.showTooltip(element, step.message, step.position);
+                this.currentStep++;
+            },
+            showTooltip(element, message, position) {
+                const tooltip = document.createElement('div');
+                tooltip.className = `tutorial-tooltip ${position}`;
+                tooltip.textContent = message;
+                element.appendChild(tooltip);
+                
+                setTimeout(() => tooltip.remove(), 3000);
+            }
+        };
+
+        // Расширяем настройки анимации
+        this.animationSettings = {
+            reels: 1,
+            particles: 1,
+            messages: 1,
+            effects: 1,
+            save() {
+                localStorage.setItem('animationSettings', JSON.stringify(this));
+            },
+            load() {
+                const saved = localStorage.getItem('animationSettings');
+                if (saved) Object.assign(this, JSON.parse(saved));
+            },
+            update(type, value) {
+                this[type] = value;
+                this.save();
+                this.applySettings();
+            },
+            applySettings() {
+                document.documentElement.style.setProperty('--reel-speed', `${1 / this.reels}s`);
+                document.documentElement.style.setProperty('--particle-speed', `${1 / this.particles}s`);
+                document.documentElement.style.setProperty('--message-speed', `${1 / this.messages}s`);
+                document.documentElement.style.setProperty('--effect-speed', `${1 / this.effects}s`);
+            }
+        };
+
+        // Добавляем поддержку жестов
+        this.initTouchControls();
+        
+        // Загружаем сохраненные данные
+        this.loadSavedState();
+        
+        // Проверяем производительность
+        this.devicePerformance.checkPerformance();
+        
+        // Показываем туториал новым игрокам
+        if (!this.tutorials.shown) {
+            this.tutorials.showNext();
+        }
     }
 
     initElements() {
@@ -285,6 +423,13 @@ class SlotMachine {
         this.isSpinning = false;
         this.spinButton.disabled = false;
         this.updateSpinButton();
+
+        // Обновляем джекпот
+        const totalBet = this.spinCost * count;
+        this.jackpot.update(totalBet);
+
+        // Автосохранение после каждого спина
+        this.saveGameState();
     }
 
     async performSingleSpin() {
@@ -615,17 +760,28 @@ class SlotMachine {
         const threeDEffect = document.getElementById('three-d-effect');
         if (threeDEffect) threeDEffect.checked = this.effects['three-d'];
 
-        const speedInput = document.getElementById('animationSpeed');
-        if (speedInput) {
-            speedInput.value = this.animationSpeed;
-            speedInput.addEventListener('input', (e) => {
-                this.animationSpeed = parseFloat(e.target.value);
-                this.updateAnimationSpeed();
-                // Обновляем отображение текущего значения
-                const speedLabel = speedInput.closest('.setting-item').querySelector('h3');
-                if (speedLabel) {
-                    speedLabel.setAttribute('data-value', `${e.target.value}x`);
-                }
+        // Добавляем слайдеры для скорости анимации
+        const reelsSpeed = document.getElementById('reelsSpeed');
+        if (reelsSpeed) {
+            reelsSpeed.value = this.animationSettings.reels;
+            reelsSpeed.addEventListener('input', (e) => {
+                this.animationSettings.update('reels', parseFloat(e.target.value));
+            });
+        }
+
+        const particlesSpeed = document.getElementById('particlesSpeed');
+        if (particlesSpeed) {
+            particlesSpeed.value = this.animationSettings.particles;
+            particlesSpeed.addEventListener('input', (e) => {
+                this.animationSettings.update('particles', parseFloat(e.target.value));
+            });
+        }
+
+        const messagesSpeed = document.getElementById('messagesSpeed');
+        if (messagesSpeed) {
+            messagesSpeed.value = this.animationSettings.messages;
+            messagesSpeed.addEventListener('input', (e) => {
+                this.animationSettings.update('messages', parseFloat(e.target.value));
             });
         }
     }
@@ -1127,10 +1283,148 @@ class SlotMachine {
             overlay.classList.add('active');
         });
     }
+
+    initTouchControls() {
+        let touchStartX = 0;
+        let touchStartY = 0;
+
+        document.addEventListener('touchstart', (e) => {
+            touchStartX = e.touches[0].clientX;
+            touchStartY = e.touches[0].clientY;
+        });
+
+        document.addEventListener('touchend', (e) => {
+            const touchEndX = e.changedTouches[0].clientX;
+            const touchEndY = e.changedTouches[0].clientY;
+            
+            const deltaX = touchEndX - touchStartX;
+            const deltaY = touchEndY - touchStartY;
+            
+            // Свайп вниз для спина
+            if (Math.abs(deltaY) > 50 && deltaY > 0) {
+                this.spin();
+            }
+            
+            // Свайп влево/вправо для настроек
+            if (Math.abs(deltaX) > 50) {
+                if (deltaX > 0) {
+                    this.showSettings();
+                } else {
+                    this.showCombos();
+                }
+            }
+        });
+
+        // Поддержка масштабирования для настройки скорости
+        const speedSlider = document.getElementById('animationSpeed');
+        if (speedSlider) {
+            speedSlider.addEventListener('gesturechange', (e) => {
+                e.preventDefault();
+                const newSpeed = this.animationSpeed * e.scale;
+                if (newSpeed >= 0.5 && newSpeed <= 2) {
+                    this.updateAnimationSpeed(newSpeed);
+                }
+            });
+        }
+    }
+
+    loadSavedState() {
+        // Загружаем баланс
+        const savedBalance = localStorage.getItem('balance');
+        if (savedBalance) {
+            this.balance = parseInt(savedBalance);
+        } else {
+            this.balance = 10000; // Устанавливаем начальный баланс, если нет сохраненного
+        }
+        this.updateBalance(0);
+        
+        // Загружаем статистику
+        const savedStats = localStorage.getItem('gameStats');
+        if (savedStats) {
+            this.sessionStats = JSON.parse(savedStats);
+        }
+        
+        this.jackpot.load();
+        this.animationSettings.load();
+    }
+
+    saveGameState() {
+        localStorage.setItem('balance', this.balance.toString());
+        localStorage.setItem('gameStats', JSON.stringify(this.sessionStats));
+        this.jackpot.save();
+        this.animationSettings.save();
+    }
 }
+
+// Добавляем консольные команды для тестирования
+window.slotDebug = {
+    // Тестирование джекпота
+    setJackpot(amount) {
+        const machine = document.querySelector('.slot-machine').__vue__;
+        if (machine && machine.jackpot) {
+            machine.jackpot.current = amount;
+            machine.jackpot.save();
+            console.log(`Джекпот установлен на ${amount}`);
+        } else {
+            console.error('Ошибка: Слот-машина не инициализирована');
+        }
+    },
+    
+    // Тестирование производительности
+    togglePerformance() {
+        const machine = document.querySelector('.slot-machine').__vue__;
+        if (machine && machine.devicePerformance) {
+            const quality = machine.devicePerformance.quality;
+            machine.devicePerformance.quality = quality === 'high' ? 'low' : 'high';
+            machine.devicePerformance.applyPerformanceSettings();
+            console.log(`Качество установлено на ${machine.devicePerformance.quality}`);
+        } else {
+            console.error('Ошибка: Слот-машина не инициализирована');
+        }
+    },
+    
+    // Тестирование туториала
+    showTutorial() {
+        const machine = document.querySelector('.slot-machine').__vue__;
+        if (machine && machine.showTutorial) {
+            machine.showTutorial();
+            console.log('Туториал запущен');
+        } else {
+            console.error('Ошибка: Слот-машина не инициализирована');
+        }
+    },
+    
+    // Тестирование анимаций
+    setAnimationSpeed(type, speed) {
+        const machine = document.querySelector('.slot-machine').__vue__;
+        if (machine && machine.animationSettings) {
+            machine.animationSettings.update(type, speed);
+            console.log(`Скорость анимации ${type} установлена на ${speed}`);
+        } else {
+            console.error('Ошибка: Слот-машина не инициализирована');
+        }
+    },
+    
+    // Сброс всех настроек
+    resetAll() {
+        localStorage.clear();
+        console.log('Все настройки сброшены');
+        location.reload();
+    }
+};
 
 // Инициализация игры после полной загрузки DOM
 document.addEventListener('DOMContentLoaded', () => {
     console.log('DOM загружен, инициализация слот-машины...');
-    new SlotMachine();
-}); 
+    const machine = new SlotMachine();
+    // Сохраняем экземпляр в DOM для доступа из консольных команд
+    document.querySelector('.slot-machine').__vue__ = machine;
+});
+
+// Выводим доступные команды в консоль
+console.log('Доступные команды для тестирования:');
+console.log('slotDebug.setJackpot(amount) - установить значение джекпота');
+console.log('slotDebug.togglePerformance() - переключить качество анимаций');
+console.log('slotDebug.showTutorial() - показать туториал');
+console.log('slotDebug.setAnimationSpeed(type, speed) - установить скорость анимации');
+console.log('slotDebug.resetAll() - сбросить все настройки'); 
